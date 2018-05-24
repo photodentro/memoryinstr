@@ -47,6 +47,7 @@
   var numOfCards = 21;
   var resources = [];
   var resourcesLoaded = 0;
+  var backCard;
 
   // Internal level number is zero-based; but we display it as 1-based.
   // Levels:       0   1    2    3    4     5  
@@ -57,6 +58,7 @@
   var gridXArr    = [ 3,  4,  5,  4,  6,  5];
   var gridYArr    = [ 2,  2,  2,  3,  3,  4];
   var gridX,gridY;
+  var open = [];
 
 
   function imgByName(name) {
@@ -93,22 +95,23 @@
   function queueComplete(event) {
     console.log("Finished loading resources");
     console.log("Let's get this party started!");
-    var emptyCard = new createjs.Bitmap(imgByName("emptycard.png"));
+    backCard = new createjs.Bitmap(imgByName("backcard.png"));
     cont = new createjs.Container();
     stage.addChild(cont);
     //all tiles are initialized
     for (i = 0; i < 21; i++) {
-      tiles[i] = new createjs.Bitmap(imgByName("emptycard.png"));
+      tiles[i] = new createjs.Bitmap(imgByName("backcard.png"));
       tiles[i].visible = false;
       tiles[i].open = false;
       tiles[i].addEventListener("click", function(event) {
-        if (open){
-          this.open = false;
-          this.image = emptyCard.image;
+        console.log(event.target.open);
+        if (event.target.open){
+          event.target.open = false;
+          event.target.image = backCard.image;
         }
         else{
-          this.open = true;
-          this.image = resources[i];
+          event.target.open = true;
+          event.target.image = event.target.openImage;
         }
         stage.update();
       });
@@ -182,7 +185,7 @@
     var y_available = stage.canvas.height - bbm - bbs/2 
     var x_available = stage.canvas.width;
     
-    var margin = 5;
+    var margin = 50/gridY;
     var scaledHeight = (y_available - margin - (gridY-1)*margin - margin) / gridY;
     //get the scaling first
     for (var i=0; i<tilesNum; i++){
@@ -259,10 +262,15 @@
     tilesNum = tilesNumArr[level];
     gridX = gridXArr[level];
     gridY = gridYArr[level];
-    console.log(gridX,gridY,tilesNum);
+
     riArr = randomCardsIndices(tilesNum);
     for (var i=0; i<tilesNum; i++){
-      tiles[i].image = resources[riArr[i]];
+      tiles[i].image = backCard.image;
+      tiles[i].open = false;
+      tiles[i].openImage = resources[riArr[i]];
+    }
+    for (var i = 0; i < 21; i++) {
+      tiles[i].visible = i < tilesNum;
     }
     resize();
   }
