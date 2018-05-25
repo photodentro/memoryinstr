@@ -48,7 +48,7 @@
   var resources = [];
   var resourcesLoaded = 0;
   var backCard;
-  var emptyCards = [];
+  var emptyCard;
   var emptyCardsIndex = 0;
 
   // Internal level number is zero-based; but we display it as 1-based.
@@ -99,21 +99,20 @@
     console.log("Finished loading resources");
     console.log("Let's get this party started!");
     backCard = new createjs.Bitmap(imgByName("backcard.png"));
+    emptyCard = new createjs.Bitmap(imgByName("emptycard.png"));
     cont = new createjs.Container();
     stage.addChild(cont);
-    for (i=0; i < 21; i++){
-       emptyCards[i] = new createjs.Bitmap(imgByName("emptycard.png"));
-       emptyCards[i].visible = false;
-       emptyCards[i].regX = emptyCards[i].image.width/2;
-       emptyCards[i].regY = emptyCards[i].image.height/2;
-       cont.addChild(emptyCards[i]);
-    }
     //all tiles are initialized
     for (i = 0; i < 21; i++) {
       tiles[i] = new createjs.Bitmap(imgByName("backcard.png"));
       tiles[i].visible = false;
       tiles[i].open = false;
+      var hit = new createjs.Shape();
+      hit.graphics.beginFill("#000").drawRect(0, 0, emptyCard.image.width, emptyCard.image.height);
+      tiles[i].hitArea = hit;
+
       tiles[i].addEventListener("click", function(event) {
+
         if (event.target.open){
           event.target.open = false;
           event.target.image = backCard.image;
@@ -124,23 +123,13 @@
           console.log(open)
         }
         else{
-          //show empty card behind item
-          ci = tiles.indexOf(event.target);
-          emptyCards[ci].x = event.target.x;
-          emptyCards[ci].y = event.target.y;
-          emptyCards[ci].scaleX = event.target.scaleX;
-          emptyCards[ci].scaleY = event.target.scaleY;
-          emptyCards[ci].visible = true;
-
-          //show item and set hitArea to the whole card
-          var hit = new createjs.Shape();
-          hit.graphics.beginFill("#000").drawRect(0, 0, emptyCards[emptyCardsIndex].image.width, emptyCards[emptyCardsIndex].image.height);
-          event.target.hitArea = hit;
+          //flip card set hitArea
           event.target.open = true;
-          event.target.image = event.target.openImage;
+          event.target.image = emptyCard.image;
           event.target.regX = event.target.image.width/2;
           event.target.regY = event.target.image.height/2;
           event.target.parent.setChildIndex(event.target, event.target.parent.numChildren - 1);
+          ci = tiles.indexOf(event.target);          
           open.push(ci);
           console.log(open);
         }
@@ -219,7 +208,7 @@
     var scaledHeight = (y_available - margin - (gridY-1)*margin - margin) / gridY;
     //get the scaling first
     for (var i=0; i<tilesNum; i++){
-      tiles[i].scaleY = scaledHeight / tiles[i].image.height;
+      tiles[i].scaleY = scaledHeight / imgByName('backcard.png').height;
       tiles[i].scaleX = tiles[i].scaleY;
     }
     var newWidth = tiles[0].scaleX * tiles[0].image.width;
@@ -303,7 +292,6 @@
     }
     for (var i = 0; i < 21; i++) {
       tiles[i].visible = i < tilesNum;
-      emptyCards[i].visible = false;
     }
     resize();
   }
