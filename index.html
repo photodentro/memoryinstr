@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <!-- Using this metatag users can't scale the page using pinchIn/out gestures on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Παιχνίδι μνήμης</title>  
+  <title>Παιχνίδι μνήμης</title> 
   <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
   <style type="text/css">
     /* Remove margins and HTML scrollbars */
@@ -48,6 +48,8 @@
   var resources = [];
   var resourcesLoaded = 0;
   var backCard;
+  var emptyCards = [];
+  var emptyCardsIndex = 0;
 
   // Internal level number is zero-based; but we display it as 1-based.
   // Levels:       0   1    2    3    4     5  
@@ -59,6 +61,7 @@
   var gridYArr    = [ 2,  2,  2,  3,  3,  4];
   var gridX,gridY;
   var open = [];
+
 
 
   function imgByName(name) {
@@ -98,20 +101,48 @@
     backCard = new createjs.Bitmap(imgByName("backcard.png"));
     cont = new createjs.Container();
     stage.addChild(cont);
+    for (i=0; i < 21; i++){
+       emptyCards[i] = new createjs.Bitmap(imgByName("emptycard.png"));
+       emptyCards[i].visible = false;
+       emptyCards[i].regX = emptyCards[i].image.width/2;
+       emptyCards[i].regY = emptyCards[i].image.height/2;
+       cont.addChild(emptyCards[i]);
+    }
     //all tiles are initialized
     for (i = 0; i < 21; i++) {
       tiles[i] = new createjs.Bitmap(imgByName("backcard.png"));
       tiles[i].visible = false;
       tiles[i].open = false;
       tiles[i].addEventListener("click", function(event) {
-        console.log(event.target.open);
         if (event.target.open){
           event.target.open = false;
           event.target.image = backCard.image;
+          event.target.regX = event.target.image.width/2;
+          event.target.regY = event.target.image.height/2;
+          ci = tiles.indexOf(event.target);
+          open.splice(open.indexOf(ci), 1);
+          console.log(open)
         }
         else{
+          //show empty card behind item
+          ci = tiles.indexOf(event.target);
+          emptyCards[ci].x = event.target.x;
+          emptyCards[ci].y = event.target.y;
+          emptyCards[ci].scaleX = event.target.scaleX;
+          emptyCards[ci].scaleY = event.target.scaleY;
+          emptyCards[ci].visible = true;
+
+          //show item and set hitArea to the whole card
+          var hit = new createjs.Shape();
+          hit.graphics.beginFill("#000").drawRect(0, 0, emptyCards[emptyCardsIndex].image.width, emptyCards[emptyCardsIndex].image.height);
+          event.target.hitArea = hit;
           event.target.open = true;
           event.target.image = event.target.openImage;
+          event.target.regX = event.target.image.width/2;
+          event.target.regY = event.target.image.height/2;
+          event.target.parent.setChildIndex(event.target, event.target.parent.numChildren - 1);
+          open.push(ci);
+          console.log(open);
         }
         stage.update();
       });
@@ -143,7 +174,6 @@
     lvlText.textBaseline = "middle";
 
     stage.addChild(lvlText);
-    
     stage.update();
     initLevel(0);
   }
@@ -198,8 +228,10 @@
     //position the things
     for (var i=0; i<gridY; i++){
       for (var j=0; j<gridX; j++){
-        tiles[i*gridX+j].x = lrspace + margin + j*(margin+newWidth);
-        tiles[i*gridX+j].y = margin + i*(scaledHeight+margin)
+        tiles[i*gridX+j].regX = tiles[i*gridX+j].image.width/2;
+        tiles[i*gridX+j].regY = tiles[i*gridX+j].image.height/2;
+        tiles[i*gridX+j].x = tiles[i*gridX+j].scaleX*tiles[i*gridX+j].regX + lrspace + margin + j*(margin+newWidth);
+        tiles[i*gridX+j].y = tiles[i*gridX+j].scaleY*tiles[i*gridX+j].regY + margin + i*(scaledHeight+margin);
         tiles[i*gridX+j].visible = true;    
       }
     }
@@ -262,7 +294,7 @@
     tilesNum = tilesNumArr[level];
     gridX = gridXArr[level];
     gridY = gridYArr[level];
-
+    open = [];
     riArr = randomCardsIndices(tilesNum);
     for (var i=0; i<tilesNum; i++){
       tiles[i].image = backCard.image;
@@ -271,9 +303,11 @@
     }
     for (var i = 0; i < 21; i++) {
       tiles[i].visible = i < tilesNum;
+      emptyCards[i].visible = false;
     }
     resize();
   }
 </script>
 </body>
 </html>
+
