@@ -6,7 +6,9 @@
   <!-- Using this metatag users can't scale the page using pinchIn/out gestures on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <title>Παιχνίδι μνήμης</title> 
-  <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
+  <!--REMEMEBER TO RESTORE
+  <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>-->
+  <script src="createjs-2015.11.26.min.js"></script>  
   <style type="text/css">
     /* Remove margins and HTML scrollbars */
     body, html  {
@@ -118,6 +120,7 @@
           event.target.image = backCard.image;
           event.target.regX = event.target.image.width/2;
           event.target.regY = event.target.image.height/2;
+          event.target.openItem.visible = false;
           ci = tiles.indexOf(event.target);
           open.splice(open.indexOf(ci), 1);
           console.log(open)
@@ -126,12 +129,15 @@
           //flip card set hitArea
           event.target.open = true;
           event.target.image = emptyCard.image;
-          event.target.regX = event.target.image.width/2;
-          event.target.regY = event.target.image.height/2;
-          event.target.parent.setChildIndex(event.target, event.target.parent.numChildren - 1);
+          //show item of card
+          event.target.openItem.visible = true;
+          cont.addChild(event.target.openItem);
+          cont.setChildIndex(cont.numChildren-1);
+          //update list of open cards
           ci = tiles.indexOf(event.target);          
           open.push(ci);
           console.log(open);
+
         }
         stage.update();
       });
@@ -204,12 +210,14 @@
     var y_available = stage.canvas.height - bbm - bbs/2 
     var x_available = stage.canvas.width;
     
-    var margin = 50/gridY;
+    var margin = 10 - gridY;
     var scaledHeight = (y_available - margin - (gridY-1)*margin - margin) / gridY;
     //get the scaling first
     for (var i=0; i<tilesNum; i++){
       tiles[i].scaleY = scaledHeight / imgByName('backcard.png').height;
       tiles[i].scaleX = tiles[i].scaleY;
+      tiles[i].openItem.scaleX = tiles[i].scaleX;
+      tiles[i].openItem.scaleY = tiles[i].scaleY;
     }
     var newWidth = tiles[0].scaleX * tiles[0].image.width;
     //compute leftrightspace
@@ -221,7 +229,12 @@
         tiles[i*gridX+j].regY = tiles[i*gridX+j].image.height/2;
         tiles[i*gridX+j].x = tiles[i*gridX+j].scaleX*tiles[i*gridX+j].regX + lrspace + margin + j*(margin+newWidth);
         tiles[i*gridX+j].y = tiles[i*gridX+j].scaleY*tiles[i*gridX+j].regY + margin + i*(scaledHeight+margin);
-        tiles[i*gridX+j].visible = true;    
+        
+        //recalculate regX,regY
+        tiles[i*gridX+j].openItem.regX = tiles[i*gridX+j].openItem.image.width/2;
+        tiles[i*gridX+j].openItem.regY = tiles[i*gridX+j].openItem.image.height/2;
+        tiles[i*gridX+j].openItem.x = tiles[i*gridX+j].x;
+        tiles[i*gridX+j].openItem.y = tiles[i*gridX+j].y;
       }
     }
     
@@ -246,7 +259,7 @@
   }
 
   //returns the pairs of indeces shuffled
-  function randomCardsIndices(num){
+  function randomItemsIndices(num){
     var temp;
     var riArr = [];
     var ri;
@@ -283,12 +296,17 @@
     tilesNum = tilesNumArr[level];
     gridX = gridXArr[level];
     gridY = gridYArr[level];
+    for (var i = 0; i<open.length; i++){
+      tiles[open[i]].openItem.visible = false;
+    }
+    stage.update();
     open = [];
-    riArr = randomCardsIndices(tilesNum);
+    riArr = randomItemsIndices(tilesNum);
     for (var i=0; i<tilesNum; i++){
       tiles[i].image = backCard.image;
       tiles[i].open = false;
-      tiles[i].openImage = resources[riArr[i]];
+      tiles[i].openItem = new createjs.Bitmap(resources[riArr[i]]);
+      tiles[i].openItem.visible = false;
     }
     for (var i = 0; i < 21; i++) {
       tiles[i].visible = i < tilesNum;
