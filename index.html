@@ -62,7 +62,8 @@
   var gridXArr    = [ 3,  4,  5,  4,  6,  5];
   var gridYArr    = [ 2,  2,  2,  3,  3,  4];
   var gridX,gridY;
-  var open = [];
+  var openCards = [];
+  var matchedCards = [];
 
 
 
@@ -108,38 +109,12 @@
     for (i = 0; i < 21; i++) {
       tiles[i] = new createjs.Bitmap(imgByName("backcard.png"));
       tiles[i].visible = false;
-      tiles[i].open = false;
       var hit = new createjs.Shape();
       hit.graphics.beginFill("#000").drawRect(0, 0, emptyCard.image.width, emptyCard.image.height);
       tiles[i].hitArea = hit;
 
       tiles[i].addEventListener("click", function(event) {
-
-        if (event.target.open){
-          event.target.open = false;
-          event.target.image = backCard.image;
-          event.target.regX = event.target.image.width/2;
-          event.target.regY = event.target.image.height/2;
-          event.target.openItem.visible = false;
-          ci = tiles.indexOf(event.target);
-          open.splice(open.indexOf(ci), 1);
-          console.log(open)
-        }
-        else{
-          //flip card set hitArea
-          event.target.open = true;
-          event.target.image = emptyCard.image;
-          //show item of card
-          event.target.openItem.visible = true;
-          cont.addChild(event.target.openItem);
-          cont.setChildIndex(cont.numChildren-1);
-          //update list of open cards
-          ci = tiles.indexOf(event.target);          
-          open.push(ci);
-          console.log(open);
-
-        }
-        stage.update();
+          openCard(event.target);
       });
       cont.addChild(tiles[i]);
     }
@@ -296,22 +271,90 @@
     tilesNum = tilesNumArr[level];
     gridX = gridXArr[level];
     gridY = gridYArr[level];
-    for (var i = 0; i<open.length; i++){
-      tiles[open[i]].openItem.visible = false;
+    for (var i = 0; i<matchedCards.length; i++){
+      tiles[matchedCards[i]].openItem.visible = false;
+    }
+    for (var i = 0; i<openCards.length; i++){
+      tiles[openCards[i]].openItem.visible = false;
     }
     stage.update();
-    open = [];
+    openCards = [];
+    matchedCards = [];
     riArr = randomItemsIndices(tilesNum);
     for (var i=0; i<tilesNum; i++){
       tiles[i].image = backCard.image;
-      tiles[i].open = false;
       tiles[i].openItem = new createjs.Bitmap(resources[riArr[i]]);
+      tiles[i].openItemIndex = riArr[i];
       tiles[i].openItem.visible = false;
     }
     for (var i = 0; i < 21; i++) {
       tiles[i].visible = i < tilesNum;
     }
     resize();
+  }
+
+  function openCard(t){
+    ci = tiles.indexOf(t);
+    var nextLevel = checkGame(ci);
+    t.image = emptyCard.image;
+    //show item of card
+    t.openItem.visible = true;
+    cont.addChild(t.openItem);
+    cont.setChildIndex(t.openItem,cont.numChildren-1);
+    //update list of open cards
+    stage.update();
+    if (nextLevel){
+      setTimeout(onMenuNext, 2000);
+    }
+  }
+
+  function closeCard(t){
+    ci = tiles.indexOf(t);
+    checkGame(ci);
+    t.image = backCard.image;
+    //show item of card
+    t.openItem.visible = false;
+    //update list of open cards
+    stage.update();
+
+  }
+  function checkGame(ci){
+    console.log(openCards[0],openCards[1]);
+    console.log(matchedCards[0],matchedCards[1],matchedCards[2],matchedCards[3],matchedCards[4],matchedCards[5]);
+
+    //if it's already open don't care
+    if (openCards.indexOf(ci)>=0){
+      return(false);
+    }
+    //if there is no open unmatched card
+    if (openCards.length == 0){
+      openCards.push(ci);
+      return(false);
+    }
+    //if there is one other open unmatched card
+    if (openCards.length == 1){
+      //see if it matches
+      if (tiles[openCards[0]].openItemIndex == tiles[ci].openItemIndex){
+        matchedCards.push(openCards[0],ci);
+        openCards = [];}
+      else{
+          openCards.push(ci);
+          return(false);
+      }
+      if (matchedCards.length == tilesNum){
+          return(true);
+      }
+      else{
+        return(false);
+      }
+    }
+  //if there are two unmatched cards on screen
+  if (openCards.length == 2){
+    closeCard(tiles[openCards[0]]);
+    closeCard(tiles[openCards[1]]);
+    //only the current card is now open
+    openCards = [ci];
+  }
   }
 </script>
 </body>
