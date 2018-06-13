@@ -43,8 +43,8 @@
   var tiles  = [];
   var tilesNum;
   var bg;
-  var resourceNames = ["clarinette.svg", "corno.svg", "flute.svg", "oboe.svg", "picolo.svg", "saxo.svg", "trombone.svg", "trompete.svg",
-"tumba.svg","flower_good.svg", "emptycard.png","backcard.png","background.svg","bar_help.svg","bar_home.svg","bar_previous.svg","bar_next.svg","flower_good.svg",];
+  var resourceNames = ["clarinette.png", "corno.png", "flute.png", "oboe.png", "picolo.png", "saxo.png", "trombone.png", "trompete.png",
+"tumba.png","flower_good.svg", "emptycard.png","backcard.png","background.svg","bar_help.svg","bar_home.svg","bar_previous.svg","bar_next.svg","flower_good.svg",];
   var numOfCards = 9;
   var resources = [];
   var resourcesLoaded = 0;
@@ -82,6 +82,11 @@
     console.clear();
     stage = new createjs.Stage("mainCanvas");
     stage.enableMouseOver();
+    statusText = new createjs.Text("Φόρτωση...", "20px Arial", "white");
+    statusText.textAlign = "center";
+    statusText.textBaseline = "middle";
+    stage.addChild(statusText);
+    resize();
      // Resource preloading
     for (var i = 0; i < resourceNames.length; i++) {
       resources[i] = new Image();
@@ -162,6 +167,17 @@
       stage.canvas.width = window.innerWidth;
       stage.canvas.height = stage.canvas.width / ratio;
     }
+    if (!backCard){
+
+      statusText.x = stage.canvas.width / 2;
+      statusText.y = stage.canvas.height / 2;
+      statusText.font = parseInt(stage.canvas.height/10) + "px Arial";
+      statusText.visible = true;
+      return;
+    }
+    else{
+      statusText.visible = false;
+    }
     var bbs = stage.canvas.height / 10;  // bar button size
     var bbm = bbs / 5;  // bar button margin
     for (i = 0; i < 4; i++) {
@@ -193,7 +209,7 @@
     imgSuccess.x = stage.canvas.width / 2;
     imgSuccess.y = stage.canvas.height / 2;
 
-    var y_available = stage.canvas.height - bbm - bbs/2 
+    var y_available = stage.canvas.height - bbm - bbs; 
     var x_available = stage.canvas.width;
     
     var margin = 10 - gridY;
