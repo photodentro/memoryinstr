@@ -5,8 +5,11 @@
   <meta charset="UTF-8" />
   <!-- Using this metatag users can't scale the page using pinchIn/out gestures on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Παιχνίδι μνήμης</title> 
+  <title>Παιχνίδι μνήμης με μουσικά όργανα</title> 
+
+  <script src="https://code.createjs.com/preloadjs-0.6.2.min.js"></script>
   <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
+  <script src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>  
   <style type="text/css">
     /* Remove margins and HTML scrollbars */
     body, html  {
@@ -43,8 +46,8 @@
   var tiles  = [];
   var tilesNum;
   var bg;
-  var resourceNames = ["clarinette.png", "corno.png", "flute.png", "oboe.png", "picolo.png", "saxo.png", "trombone.png", "trompete.png",
-"tumba.png","flower_good.svg", "emptycard.png","backcard.png","background.svg","bar_help.svg","bar_home.svg","bar_previous.svg","bar_next.svg","flower_good.svg",];
+  var resourceNames = ["clarinette.png", "corno.png", "flute.png", "oboe.png", "picolo.png", "saxo.png", "trombone.png", "trompete.png", "tumba.png","flower_good.svg", "emptycard.png","backcard.png","background.png","bar_help.svg","bar_home.svg","bar_previous.svg","bar_next.svg","flower_good.svg",];
+  var soundNames = ["clarinetteSound.mp3","cornoSound.mp3","fluteSound.mp3","oboeSound.mp3","picoloSound.mp3","saxoSound.mp3","tromboneSound.mp3","trompeteSound.mp3","tumbaSound.mp3",]
   var numOfCards = 9;
   var resources = [];
   var resourcesLoaded = 0;
@@ -72,11 +75,25 @@
   }
  function queueFileLoad(event) {
     resourcesLoaded++;
-    statusText.text = "Φόρτωση " + parseInt(100*resourcesLoaded/resourceNames.length) + " %";
+    statusText.text = "Φόρτωση " + parseInt(100*resourcesLoaded/(resourceNames.length+soundNames.length)) + " %";
     stage.update();
     if (resourcesLoaded == resourceNames.length){
-      queueComplete(event);
+      loadSounds(event);
     }
+  }
+  function loadSounds(event){
+    var queue = new createjs.LoadQueue();
+    queue.installPlugin(createjs.Sound);
+    queue.on("fileload", soundLoad);
+    queue.on("complete", queueComplete);
+    var soundsManifest = [];
+    for (var i=0; i<soundNames.length; i++){
+      soundsManifest.push({id:soundNames[i].slice(0,-4),src:"resource/"+soundNames[i]})      
+    }
+    queue.loadManifest(soundsManifest);
+  }
+  function soundLoad(event){
+    resourcesLoaded++;
   }
   function init(){
     console.clear();
@@ -93,7 +110,7 @@
       resources[i].src = "resource/" + resourceNames[i];
       resources[i].onload = queueFileLoad;
     }
-    bg = new createjs.Bitmap(imgByName("background.svg"));
+    bg = new createjs.Bitmap(imgByName("background.png"));
     
     bg.scaleX = stage.canvas.width / bg.image.width;
     bg.scaleY = stage.canvas.height / bg.image.height;
@@ -115,7 +132,6 @@
       var hit = new createjs.Shape();
       hit.graphics.beginFill("#000").drawRect(0, 0, emptyCard.image.width, emptyCard.image.height);
       tiles[i].hitArea = hit;
-
       tiles[i].addEventListener("click", function(event) {
           openCard(event.target);
       });
@@ -127,6 +143,7 @@
       var menuImageStartIndex = resourceNames.indexOf('bar_help.svg');
 
       menubar[i] = new createjs.Bitmap(resources[menuImageStartIndex+i]);
+      var hit = new createjs.Shape();
       menubar[i].addEventListener("click", onMenuClick[i]);
       menubar[i].addEventListener("mouseover", function(event) {
         // Bring the target on top in its container, mostly for the rotation animation
@@ -147,7 +164,6 @@
     lvlText.textBaseline = "middle";
 
     imgSuccess = new createjs.Bitmap(imgByName("flower_good.svg"));
-    console.log(imgSuccess);
     imgSuccess.visible = false;
     stage.addChild(imgSuccess);
 
@@ -310,10 +326,10 @@
     openCards = [];
     matchedCards = [];
     riArr = randomItemsIndices(tilesNum);
-    console.log(riArr);
     for (var i=0; i<tilesNum; i++){
       tiles[i].image = backCard.image;
       tiles[i].openItem = new createjs.Bitmap(resources[riArr[i]]);
+      tiles[i].sound = soundNames[riArr[i]].slice(0,-4);
       tiles[i].openItemIndex = riArr[i];
       tiles[i].openItem.visible = false;
     }
@@ -324,6 +340,7 @@
   }
 
   function openCard(t){
+    createjs.Sound.play(t.sound);
     ci = tiles.indexOf(t);
     endGame = checkGame(ci);
     t.image = emptyCard.image;
