@@ -341,17 +341,19 @@
 
   function openCard(t){
     createjs.Sound.play(t.sound);
-    ci = tiles.indexOf(t);
-    endGame = checkGame(ci);
-    t.image = emptyCard.image;
-    //show item of card
-    t.openItem.visible = true;
-    cont.addChild(t.openItem);
-    cont.setChildIndex(t.openItem,cont.numChildren-1);
-    //update list of open cards
-    stage.update();
-    if (endGame){
-      setTimeout(onMenuNext, 2000);
+    if (!t.openItem.visible){//if it's already open do nothing
+      ci = tiles.indexOf(t);
+      endGame = checkGame(ci);
+      t.image = emptyCard.image;
+      //show item of card
+      t.openItem.visible = true;
+      cont.addChild(t.openItem);
+      cont.setChildIndex(t.openItem,cont.numChildren-1);
+      //update list of open cards
+      stage.update();
+      if (endGame){
+        setTimeout(onMenuNext, 2000);
+      }
     }
   }
 
