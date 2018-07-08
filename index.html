@@ -1,16 +1,16 @@
 <!doctype html> 
 <!-- Copyright (C) 2018 Alkis Georgopoulos <alkisg@gmail.com>. License: GPLv3. -->
-<html lang="el"> 
+<html lang='el'> 
 <head> 
-  <meta charset="UTF-8" />
+  <meta charset='UTF-8' />
   <!-- Using this metatag users can't scale the page using pinchIn/out gestures on mobile devices -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
   <title>Παιχνίδι μνήμης με μουσικά όργανα</title> 
 
-  <script src="https://code.createjs.com/preloadjs-0.6.2.min.js"></script>
-  <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
-  <script src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>  
-  <style type="text/css">
+  <script src='https://code.createjs.com/preloadjs-0.6.2.min.js'></script>
+  <script src='https://code.createjs.com/1.0.0/easeljs.min.js'></script>
+  <script src='https://code.createjs.com/soundjs-0.6.2.min.js'></script>  
+  <style type='text/css'>
     /* Remove margins and HTML scrollbars */
     body, html  {
       margin: 0;
@@ -31,14 +31,14 @@
   </style>
 </head>
 
-<body onLoad="init();">
-  <div style="border-width:10px;border-color:white;">
-    <canvas id="mainCanvas" width="320" height="180">
+<body onLoad='init();'>
+  <div style='border-width:10px;border-color:white;'>
+    <canvas id='mainCanvas' width='320' height='180'>
       Your browser doesn't support HTML5!
     </canvas>
   </div>
 <script>//where everything happens
-  var statusText = "";
+  var statusText = '';
   var level = 0;
   var lvlText = 1;
   var menubar = [];
@@ -46,8 +46,8 @@
   var tiles  = [];
   var tilesNum;
   var bg;
-  var resourceNames = ["clarinette.png", "corno.png", "flute.png", "oboe.png", "picolo.png", "saxo.png", "trombone.png", "trompete.png", "tumba.png","flower_good.svg", "emptycard.png","backcard.png","background.png","bar_help.svg","bar_home.svg","bar_previous.svg","bar_next.svg","flower_good.svg",];
-  var soundNames = ["clarinetteSound.mp3","cornoSound.mp3","fluteSound.mp3","oboeSound.mp3","picoloSound.mp3","saxoSound.mp3","tromboneSound.mp3","trompeteSound.mp3","tumbaSound.mp3",]
+  var resourceNames = ['clarinette.png', 'corno.png', 'flute.png', 'oboe.png', 'picolo.png', 'saxo.png', 'trombone.png', 'trompete.png', 'tumba.png','flower_good.svg', 'emptycard.png','backcard.png','background.png','bar_home.svg', 'bar_help.svg', 'bar_about.svg', 'bar_previous.svg', 'bar_next.svg','flower_good.svg',];
+  var soundNames = ['clarinetteSound.mp3','cornoSound.mp3','fluteSound.mp3','oboeSound.mp3','picoloSound.mp3','saxoSound.mp3','tromboneSound.mp3','trompeteSound.mp3','tumbaSound.mp3',]
   var numOfCards = 9;
   var resources = [];
   var resourcesLoaded = 0;
@@ -75,7 +75,7 @@
   }
  function queueFileLoad(event) {
     resourcesLoaded++;
-    statusText.text = "Φόρτωση " + parseInt(100*resourcesLoaded/(resourceNames.length+soundNames.length)) + " %";
+    statusText.text = 'Φόρτωση ' + parseInt(100*resourcesLoaded/(resourceNames.length+soundNames.length)) + ' %';
     stage.update();
     if (resourcesLoaded == resourceNames.length){
       loadSounds(event);
@@ -84,11 +84,11 @@
   function loadSounds(event){
     var queue = new createjs.LoadQueue();
     queue.installPlugin(createjs.Sound);
-    queue.on("fileload", soundLoad);
-    queue.on("complete", queueComplete);
+    queue.on('fileload', soundLoad);
+    queue.on('complete', queueComplete);
     var soundsManifest = [];
     for (var i=0; i<soundNames.length; i++){
-      soundsManifest.push({id:soundNames[i].slice(0,-4),src:"resource/"+soundNames[i]})      
+      soundsManifest.push({id:soundNames[i].slice(0,-4),src:'resource/'+soundNames[i]})      
     }
     queue.loadManifest(soundsManifest);
   }
@@ -97,20 +97,20 @@
   }
   function init(){
     console.clear();
-    stage = new createjs.Stage("mainCanvas");
+    stage = new createjs.Stage('mainCanvas');
     stage.enableMouseOver();
-    statusText = new createjs.Text("Φόρτωση...", "20px Arial", "white");
-    statusText.textAlign = "center";
-    statusText.textBaseline = "middle";
+    statusText = new createjs.Text('Φόρτωση...', '20px Arial', 'white');
+    statusText.textAlign = 'center';
+    statusText.textBaseline = 'middle';
     stage.addChild(statusText);
     resize();
      // Resource preloading
     for (var i = 0; i < resourceNames.length; i++) {
       resources[i] = new Image();
-      resources[i].src = "resource/" + resourceNames[i];
+      resources[i].src = 'resource/' + resourceNames[i];
       resources[i].onload = queueFileLoad;
     }
-    bg = new createjs.Bitmap(imgByName("background.png"));
+    bg = new createjs.Bitmap(imgByName('background.png'));
     
     bg.scaleX = stage.canvas.width / bg.image.width;
     bg.scaleY = stage.canvas.height / bg.image.height;
@@ -121,56 +121,56 @@
   }
  
   function queueComplete(event) {
-    backCard = new createjs.Bitmap(imgByName("backcard.png"));
-    emptyCard = new createjs.Bitmap(imgByName("emptycard.png"));
+    backCard = new createjs.Bitmap(imgByName('backcard.png'));
+    emptyCard = new createjs.Bitmap(imgByName('emptycard.png'));
     cont = new createjs.Container();
     stage.addChild(cont);
     //all tiles are initialized
     for (i = 0; i < 22; i++) {
-      tiles[i] = new createjs.Bitmap(imgByName("backcard.png"));
+      tiles[i] = new createjs.Bitmap(imgByName('backcard.png'));
       tiles[i].visible = false;
       var hit = new createjs.Shape();
-      hit.graphics.beginFill("#000").drawRect(0, 0, emptyCard.image.width, emptyCard.image.height);
+      hit.graphics.beginFill('#000').drawRect(0, 0, emptyCard.image.width, emptyCard.image.height);
       tiles[i].hitArea = hit;
-      tiles[i].addEventListener("click", function(event) {
+      tiles[i].addEventListener('click', function(event) {
           openCard(event.target);
       });
       cont.addChild(tiles[i]);
     }
 
-    var onMenuClick = [onMenuHelp, onMenuHome, onMenuPrevious, onMenuNext];
-    for (i = 0; i < 4; i++) {
-      var menuImageStartIndex = resourceNames.indexOf('bar_help.svg');
+  var onMenuClick = [onMenuHome, onMenuHelp, onMenuAbout, onMenuPrevious, onMenuNext];
+    for (i = 0; i < 5; i++) {
+      var menuImageStartIndex = resourceNames.indexOf('bar_home.svg');
 
       menubar[i] = new createjs.Bitmap(resources[menuImageStartIndex+i]);
       var hit = new createjs.Shape();
-      menubar[i].addEventListener("click", onMenuClick[i]);
-      menubar[i].addEventListener("mouseover", function(event) {
+      menubar[i].addEventListener('click', onMenuClick[i]);
+      menubar[i].addEventListener('mouseover', function(event) {
         // Bring the target on top in its container, mostly for the rotation animation
         event.target.parent.setChildIndex(event.target, event.target.parent.numChildren - 1);
         event.target.scaleX = 1.2*event.target.savedscaleX;
         event.target.scaleY = 1.2*event.target.savedscaleY;
         stage.update();
       });
-      menubar[i].addEventListener("mouseout", function(event) {
+      menubar[i].addEventListener('mouseout', function(event) {
         event.target.scaleX = event.target.savedscaleX;
         event.target.scaleY = event.target.savedscaleY;
         stage.update();
       });
       stage.addChild(menubar[i]);
     }
-    lvlText = new createjs.Text("1", "20px Arial", "white");
-    lvlText.textAlign = "center";
-    lvlText.textBaseline = "middle";
+    lvlText = new createjs.Text('1', '20px Arial', 'white');
+    lvlText.textAlign = 'center';
+    lvlText.textBaseline = 'middle';
 
-    imgSuccess = new createjs.Bitmap(imgByName("flower_good.svg"));
+    imgSuccess = new createjs.Bitmap(imgByName('flower_good.svg'));
     imgSuccess.visible = false;
     stage.addChild(imgSuccess);
 
     stage.addChild(lvlText);
     stage.update();
     initLevel(0);  
-    createjs.Ticker.on("tick", tick);
+    createjs.Ticker.on('tick', tick);
     createjs.Ticker.framerate = 10;
   }
   function resize() {
@@ -187,36 +187,43 @@
 
       statusText.x = stage.canvas.width / 2;
       statusText.y = stage.canvas.height / 2;
-      statusText.font = parseInt(stage.canvas.height/10) + "px Arial";
+      statusText.font = parseInt(stage.canvas.height/10) + 'px Arial';
       statusText.visible = true;
       return;
     }
     else{
       statusText.visible = false;
     }
-    var bbs = stage.canvas.height / 10;  // bar button size
-    var bbm = bbs / 5;  // bar button margin
-    for (i = 0; i < 4; i++) {
-      // Leave one space for the level
-      if (i < 3)
-        j = i;
-      else
-        j = i + 1;
-      menubar[i].scaleX = bbs / menubar[i].image.width;
-      menubar[i].scaleY = bbs / menubar[i].image.height;
-      menubar[i].regX = menubar[i].image.width / 2;
-      menubar[i].regY = menubar[i].image.height / 2;
-      menubar[i].x = (j + 1)*bbm + bbs/2 + j*bbs;
-      menubar[i].y = stage.canvas.height - bbm - bbs/2;
-      // These copies are used to preserve the original scale on mouseover
-      menubar[i].savedscaleX = menubar[i].scaleX;
-      menubar[i].savedscaleY = menubar[i].scaleY;
-    }
-    lvlText.text = level + 1;
-    lvlText.x = (3 + 1)*bbm + bbs/2 + 3*bbs - bbs/4;
-    lvlText.y = stage.canvas.height - bbm/2 - bbs/2;
-    lvlText.font = parseInt(2*bbs/2) + "px Arial";
-    menubar[3].x -= bbs/2;
+  var bbs = stage.canvas.height / 10;  // bar button size
+  var bbm = bbs / 5;  // bar button margin
+  // TODO: local/global variables, eslint...
+  for (i = 0; i < 5; i++) {
+    // Leave one space for the level
+    if (i < 4)
+      j = i;
+    else
+      j = i + 1;
+    menubar[i].scaleX = bbs / menubar[i].image.width;
+    menubar[i].scaleY = bbs / menubar[i].image.height;
+    menubar[i].regX = menubar[i].image.width / 2;
+    menubar[i].regY = menubar[i].image.height / 2;
+    menubar[i].x = (j + 1)*bbm + bbs/2 + j*bbs;
+    menubar[i].y = stage.canvas.height - bbm - bbs/2;
+    // These copies are used to preserve the original scale on mouseover
+    menubar[i].savedscaleX = menubar[i].scaleX;
+    menubar[i].savedscaleY = menubar[i].scaleY;
+  }
+
+  lvlText.text = level + 1;
+  lvlText.x = (4 + 1)*bbm + bbs/2 + 4*bbs;
+  lvlText.y = stage.canvas.height - bbm/2 - bbs/2;
+  lvlText.font = parseInt(2*bbs/2) + 'px Arial';
+
+  // If level is single digit, move lvlText and bar_previous a bit left
+  if (level + 1 < 10) {
+    lvlText.x -= bbs/4;
+    menubar[4].x -= bbs/2;
+  }
 
     imgSuccess.scaleY = (2/3) * stage.canvas.height / imgSuccess.image.height;
     imgSuccess.scaleX = imgSuccess.scaleY;
@@ -261,7 +268,11 @@
     stage.update();
   }
   function onMenuHelp(event) {
-    alert("Ανοίξτε τις ίδιες κάρτες!");
+    alert('Ανοίξτε τις ίδιες κάρτες!');
+  }
+
+  function onMenuAbout(event) {
+    window.open("credits/index_DS_II.html");
   }
 
   function onMenuHome(event) {
