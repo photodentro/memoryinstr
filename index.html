@@ -42,11 +42,11 @@
   var level = 0;
   var lvlText = 1;
   var menubar = [];
-  const ratio = 16.0/9;
+  const ratio = 16/9;
   var tiles  = [];
   var tilesNum;
   var bg;
-  var resourceNames = ['clarinette.png','corno.png','flute.png','gaida.png','kastanietes.png','koudounakia.png','marakes.png','ntefi.png','oboe.png','piatinia.png','picolo.png','saxo.png','trombone.png','trompete.png','tumba.png','tymbano.png','xylokouti.png','xystra.png','zhlia.png','backcard.png','background.png', 'bar_home.svg', 'bar_help.svg', 'bar_about.svg', 'bar_previous.svg' , 'bar_next.svg','emptycard.png','flower_good.svg',];
+  var resourceNames = ['clarinette.png','corno.png','flute.png','gaida.png','kastanietes.png','koudounakia.png','marakes.png','ntefi.png','oboe.png','piatinia.png','picolo.png','saxo.png','trombone.png','trompete.png','tumba.png','tymbano.png','xylokouti.png','xystra.png','zhlia.png','backcard.svg','background.svg', 'bar_home.svg', 'bar_help.svg', 'bar_about.svg', 'bar_previous.svg' , 'bar_next.svg','emptycard.svg','flower_good.svg',];
   var soundNames = ['clarinetteSound.mp3','cornoSound.mp3','fluteSound.mp3','gaidaSound.mp3','kastanietesSound.mp3','koudounakiaSound.mp3','marakesSound.mp3','ntefiSound.mp3','oboeSound.mp3','piatiniaSound.mp3','picoloSound.mp3','saxoSound.mp3','tromboneSound.mp3','trompeteSound.mp3','tumbaSound.mp3','tymbanoSound.mp3','xylokoutiSound.mp3','xystraSound.mp3','zhliaSound.mp3',];
   var numOfCards = 9;
   var resources = [];
@@ -110,24 +110,23 @@
       resources[i].src = 'resource/' + resourceNames[i];
       resources[i].onload = queueFileLoad;
     }
-    bg = new createjs.Bitmap(imgByName('background.png'));
+    bg = new createjs.Bitmap(imgByName('background.svg'));
     
     bg.scaleX = stage.canvas.width / bg.image.width;
     bg.scaleY = stage.canvas.height / bg.image.height;
-    bg.alpha = 0.5;
     stage.addChild(bg);
     stage.update();
     window.addEventListener('resize', resize, false);
   }
  
   function queueComplete(event) {
-    backCard = new createjs.Bitmap(imgByName('backcard.png'));
-    emptyCard = new createjs.Bitmap(imgByName('emptycard.png'));
+    backCard = new createjs.Bitmap(imgByName('backcard.svg'));
+    emptyCard = new createjs.Bitmap(imgByName('emptycard.svg'));
     cont = new createjs.Container();
     stage.addChild(cont);
     //all tiles are initialized
     for (i = 0; i < 22; i++) {
-      tiles[i] = new createjs.Bitmap(imgByName('backcard.png'));
+      tiles[i] = new createjs.Bitmap(imgByName('backcard.svg'));
       tiles[i].visible = false;
       var hit = new createjs.Shape();
       hit.graphics.beginFill('#000').drawRect(0, 0, emptyCard.image.width, emptyCard.image.height);
@@ -139,6 +138,7 @@
     }
 
   var onMenuClick = [onMenuHome, onMenuHelp, onMenuAbout, onMenuPrevious, onMenuNext];
+    //menu items are initialized here but they are resized separately
     for (i = 0; i < 5; i++) {
       var menuImageStartIndex = resourceNames.indexOf('bar_home.svg');
 
@@ -197,7 +197,19 @@
   var bbs = stage.canvas.height / 10;  // bar button size
   var bbm = bbs / 5;  // bar button margin
   // TODO: local/global variables, eslint...
-  for (i = 0; i < 5; i++) {
+  for (i = 0; i < 3; i++) {
+    // Leave one space for the level
+    menubar[i].scaleX = bbs / menubar[i].image.width;
+    menubar[i].scaleY = bbs / menubar[i].image.height;
+    menubar[i].regX = menubar[i].image.width / 2;
+    menubar[i].regY = menubar[i].image.height / 2;
+    menubar[i].x = (i + 1)*bbm + bbs/2 + i*bbs;
+    menubar[i].y = stage.canvas.height - bbm - bbs/2;
+    // These copies are used to preserve the original scale on mouseover
+    menubar[i].savedscaleX = menubar[i].scaleX;
+    menubar[i].savedscaleY = menubar[i].scaleY;
+  }
+  for (i = 3; i < 5; i++) {
     // Leave one space for the level
     if (i < 4)
       j = i;
@@ -207,17 +219,18 @@
     menubar[i].scaleY = bbs / menubar[i].image.height;
     menubar[i].regX = menubar[i].image.width / 2;
     menubar[i].regY = menubar[i].image.height / 2;
-    menubar[i].x = (j + 1)*bbm + bbs/2 + j*bbs;
+    menubar[i].x = stage.canvas.width/2 + (j + 1)*bbm + 2*bbs + j*bbs;
     menubar[i].y = stage.canvas.height - bbm - bbs/2;
     // These copies are used to preserve the original scale on mouseover
     menubar[i].savedscaleX = menubar[i].scaleX;
     menubar[i].savedscaleY = menubar[i].scaleY;
   }
 
+
   lvlText.text = level + 1;
-  lvlText.x = (4 + 1)*bbm + bbs/2 + 4*bbs;
-  lvlText.y = stage.canvas.height - bbm/2 - bbs/2;
-  lvlText.font = parseInt(2*bbs/2) + 'px Arial';
+  lvlText.x = stage.canvas.width/2  + bbs + 2*bbs + (j-1)*bbs;
+  lvlText.y = stage.canvas.height - bbm - bbs/2;
+  lvlText.font = parseInt(2*bbs/2) + "px Arial";
 
   // If level is single digit, move lvlText and bar_previous a bit left
   if (level + 1 < 10) {
@@ -239,10 +252,10 @@
     var scaledHeight = (y_available - margin - (gridY-1)*margin - margin) / gridY;
     //get the scaling first
     for (var i=0; i<tilesNum; i++){
-      tiles[i].scaleY = scaledHeight / imgByName('backcard.png').height;
+      tiles[i].scaleY = scaledHeight / imgByName('backcard.svg').height;
       tiles[i].scaleX = tiles[i].scaleY;
-      tiles[i].openItem.scaleX = tiles[i].scaleX;
-      tiles[i].openItem.scaleY = tiles[i].scaleY;
+      tiles[i].openItem.scaleX = 2*tiles[i].scaleX;
+      tiles[i].openItem.scaleY = 2*tiles[i].scaleY;
     }
     var newWidth = tiles[0].scaleX * tiles[0].image.width;
     //compute leftrightspace

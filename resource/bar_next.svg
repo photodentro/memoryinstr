@@ -1,100 +1,139 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="66"
-   height="66"
-   id="svg4211"
    version="1.1"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="bar_next.svg">
-  <defs
-     id="defs4213" />
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#959595"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="2.8"
-     inkscape:cx="-46.557137"
-     inkscape:cy="37.483404"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
-     inkscape:window-width="1920"
-     inkscape:window-height="1024"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+   preserveAspectRatio="none"
+   x="0px"
+   y="0px"
+   width="208.19824"
+   height="229"
+   viewBox="0 0 208.19824 229"
+   id="svg32"
+   sodipodi:docname="bar_next.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
   <metadata
-     id="metadata4216">
+     id="metadata36">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
-        <dc:date>2015</dc:date>
-        <dc:creator>
-          <cc:Agent>
-            <dc:title>Timothée Giet</dc:title>
-          </cc:Agent>
-        </dc:creator>
-        <cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:title></dc:title>
       </cc:Work>
-      <cc:License
-         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#Reproduction" />
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#Distribution" />
-        <cc:requires
-           rdf:resource="http://creativecommons.org/ns#Notice" />
-        <cc:requires
-           rdf:resource="http://creativecommons.org/ns#Attribution" />
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
-        <cc:requires
-           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
-      </cc:License>
     </rdf:RDF>
   </metadata>
-  <g
-     inkscape:label="Calque 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-483.10616,-391.492)">
-    <path
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="csssc"
-       style="fill:#e99e33;fill-opacity:1;stroke:#ffffff;stroke-width:2.97653389;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 504.78859,392.98027 c -23.67154,0 -19.94855,12.81648 -19.94855,30.2179 0,17.40143 -3.72299,32.83156 19.94855,32.83156 23.67154,0 42.8797,-14.12646 42.8797,-31.52772 0,-17.40142 -19.20816,-31.52174 -42.8797,-31.52174 z"
-       id="path3631" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     id="namedview34"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.78167441"
+     inkscape:cx="-192.83941"
+     inkscape:cy="34.31799"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg32" />
+  <defs
+     id="defs12">
+    <image
+       sodipodi:absref="C:\Users\dniko\Documents\GitHub\emeProgrammer\EikonidiaEfarmoges\Graphics\colors\./images/flash0_ai_1_OBJECTS__Path__4_0.png"
+       xlink:href="./images/flash0_ai_1_OBJECTS__Path__4_0.png"
+       height="229"
+       width="366"
+       y="0"
+       x="0"
+       id="flash0_ai_1_OBJECTS__Path__4_0" />
     <g
-       style="display:inline;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
-       id="LEVEL_UP-3"
-       transform="matrix(0,1.0212862,-2.6337741,0,925.61844,-181.23783)">
+       id="Layer0_0_MEMBER_1_FILL">
       <path
-         id="path3631-6"
-         d="m 574.20435,160.10029 c 0.0144,-0.80702 0.54584,-1.64557 1.57576,-2.30282 l 13.61135,-8.68546 c 1.03008,-0.65725 2.34412,-0.99675 3.6088,-1.00557 0.0382,-2.6e-4 0.0762,0.004 0.1144,0.004 1.29947,-0.0115 2.66194,0.32462 3.72304,1.00173 l 13.61136,8.68546 c 1.9387,1.23716 2.11422,3.11829 0.39084,4.218 -1.72338,1.0997 -4.67132,0.98769 -6.61018,-0.24947 l -11.11506,-7.08885 -11.11522,7.08885 c -1.93886,1.23716 -4.8868,1.34917 -6.61018,0.24947 -0.80785,-0.51549 -1.1976,-1.20311 -1.18491,-1.91518 z"
-         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         sodipodi:nodetypes="cccssccscccscc"
-         inkscape:connector-curvature="0" />
+         d="m 138.55,573.95 q -6.05,0 -8.6,6.1 -2.55,6.05 1.3,11.25 l 38.9,51.7 q 2.2,2.95 2.2,6.75 0,3.85 -2.2,6.75 l -38.9,51.7 q -3.85,5.15 -1.3,11.2 2.55,6.1 8.6,6.1 h 209.5 q 3.8,0 6.6,-2.9 l 59.4,-63.4 q 2.95,-3.1 2.95,-7.6 0,-4.5 -2.95,-7.6 L 351.3,576.9 q -2.85,-2.95 -6.6,-2.95 z"
+         id="path3"
+         inkscape:connector-curvature="0"
+         style="fill:#ffffff;stroke:none" />
     </g>
+    <g
+       id="Layer0_0_MEMBER_2_FILL">
+      <path
+         d="m 149.9,581.55 q -5.45,0 -6.85,3.3 -1.45,3.35 2.05,7.95 l 39.2,50.85 q 2,2.65 2,6.1 0,3.45 -2,6.1 l -40.7,54 q -2.75,4.05 -0.7,6.4 1.7,1.9 5.5,1.9 l 196.1,-0.2 q 3.4,0 5.9,-2.65 l 53.5,-57.05 q 2.65,-2.75 2.65,-6.85 0,-4.05 -2.65,-6.85 L 347.4,584.2 q -2.5,-2.65 -5.95,-2.65 z"
+         id="path6"
+         inkscape:connector-curvature="0"
+         style="fill:#2792c1;stroke:none" />
+    </g>
+    <g
+       id="Layer0_0_MEMBER_3_FILL">
+      <path
+         d="m 156.3,704.15 q -2.55,3.95 -0.65,6.25 1.6,1.85 5.15,1.85 l 181.45,-0.15 q 3.15,0 5.45,-2.6 L 397.2,653.55 194,651.2 Z"
+         id="path9"
+         inkscape:connector-curvature="0"
+         style="fill:#2c9ec6;stroke:none" />
+    </g>
+  </defs>
+  <g
+     transform="scale(0.56884766,1)"
+     id="g18">
+    <g
+       id="g16">
+      <use
+         xlink:href="#flash0_ai_1_OBJECTS__Path__4_0"
+         id="use14"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+    </g>
+  </g>
+  <g
+     transform="matrix(0.56884766,0,0,1,-50.65,-542.6)"
+     id="g22">
+    <use
+       xlink:href="#Layer0_0_MEMBER_1_FILL"
+       id="use20"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+  </g>
+  <g
+     transform="matrix(0.56884766,0,0,1,-50.65,-542.6)"
+     id="g26">
+    <use
+       xlink:href="#Layer0_0_MEMBER_2_FILL"
+       id="use24"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+  </g>
+  <g
+     transform="matrix(0.56884766,0,0,1,-50.65,-542.6)"
+     id="g30">
+    <use
+       xlink:href="#Layer0_0_MEMBER_3_FILL"
+       id="use28"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
   </g>
 </svg>
