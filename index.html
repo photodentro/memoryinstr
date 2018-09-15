@@ -67,6 +67,7 @@
   var gridX,gridY;
   var openCards = [];
   var matchedCards = [];
+  var playingSound;
 
 
 
@@ -364,7 +365,11 @@
   }
 
   function openCard(t){
+  	if (playingSound){
+  		createjs.Sound.stop(playingSound);
+  	}
     createjs.Sound.play(t.sound);
+    playingSound = t.sound;
     if (!t.openItem.visible){//if it's already open do nothing
       ci = tiles.indexOf(t);
       endGame = checkGame(ci);
