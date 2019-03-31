@@ -31,39 +31,42 @@ function random(num) {
   return Math.floor(Math.random() * num);
 }
 
-// Return a shuffled array [0, ..., num-1].
+// Return a shuffled copy of the list
 // If differentIndex==true, make sure that array[i] != i.
-function shuffledArray(num, differentIndex) {
-  var result = [];
+function shuffledArray(list, differentIndex) {
+  var result = []; //result is random indexes
   var i;
   var j;
   var temp;
 
   // Fill the array with [0, ..., num-1]
-  for (i = 0; i < num; i += 1) {
+  for (i = 0; i < list.length; i += 1) {
     result.push(i);
   }
   // Shuffle the array
-  for (i = 0; i < num; i += 1) {
-    j = random(num);
+  for (i = 0; i < list.length; i += 1) {
+    j = random(list.length);
     temp = result[i];
     result[i] = result[j];
     result[j] = temp;
   }
   // Make sure that result[i] != i
   if (differentIndex) {
-    for (i = 0; i < num; i += 1) {
+    for (i = 0; i < list.length; i += 1) {
       if (result[i] === i) {
-        j = (i + 1) % num;
+        j = (i + 1) % list.length;
         temp = result[i];
         result[i] = result[j];
         result[j] = temp;
       }
     }
   }
-  return result;
+  newList = [];
+  for (i=0; i<list.length; i++){
+    newList.push(list[result[i]]);
+  }
+  return newList;
 }
-
 function ge(element) {
   return document.getElementById(element);
 }
@@ -91,10 +94,13 @@ function onHome(event) {
 
 function onHelp(event) {
   ge('help').style.display = 'flex';
+  ge('audiohelp').currentTime = 0;
+  ge('audiohelp').play();
 }
 
 function onHelpHide(event) {
   ge('help').style.display = '';
+  ge('audiohelp').pause();
 }
 
 function onAbout(event) {
@@ -118,173 +124,175 @@ function onFullScreen(event) {
 }
 
 function onPrevious(event) {
-  initLevel(act.level - 1);
+  if (!act.lock)
+    initLevel(act.level - 1);
 }
 
 function onNext(event) {
-  initLevel(act.level + 1);
+  if (!act.lock)
+    initLevel(act.level + 1);
 }
 
-
-function pickCards(num){
-  retArr = [];
-  x = [];
-  for (var i = 0; i<18; i++){
-    x.push(i);
+function pickCards(n){
+  /*n cards for level*/
+  cards = [];
+  for (var i=0; i<n/2; i++){
+    possibleAnimal = random(act.numOfAnimals);
+    while (cards.indexOf(possibleAnimal)>=0){
+      possibleAnimal = random(act.numOfAnimals);
+    }
+    cards.push(possibleAnimal);
   }
-  for (var i=0; i<num; i++){
-    j = random(x.length);
-    retArr.push(x[j]);
-    x.splice(j,1);
-  }
-  return(retArr);
+  return(shuffledArray(cards.concat(cards)));
 }
 
-function rearrangeCards(cards){
-  cards = cards.concat(cards);
-  cardsIndex = shuffledArray(cards.length,false);
-  arrangedCards = [];
-  for (var i = 0; i<cardsIndex.length; i++){
-    arrangedCards.push(cards[cardsIndex[i]]+1);
-  }
-  return(arrangedCards);
+function hideCard(id){
+    ge(id).style.display = 'none';
+    ge(id).src = 'resource/backcard.svg';
+    var aid = 'a' + id;
+    ge(aid).style.display = 'none';
 }
 
-function hideCards(){
+function hideAllCards(){
   for (var i = 0; i<6; i++){
     for (var j = 0; j<3; j++){
-        var id = 'r' + (j+1).toString() + 'c' + (i+1).toString();
-        ge(id).style.display = 'none';
-        ge(id).src = 'resource/backcard.svg';
-        var aid = 'a' + id;
-        ge(aid).style.display = 'none';
-
+        var id = 'r' + j.toString() + 'c' + i.toString();
+        hideCard(id);
     }
   }
+}
+
+function openAnimation(animalId,cardId){
+      setAnimation(cardId,'flipithide','0.5s');
+      setAnimation(animalId,'flipitshow','0.5s');
+      setTimeout(function(){
+        ge(cardId).src = "resource/emptycard.svg";
+        ge(animalId).style.display = "block";
+        setAnimation(cardId,'flipitshow','0.5s');
+      },500);
+    }
+
+function onAnimalClick(event){
+    var animalId = event.target.id;
+    var cardId = animalId.substr(1);
+    openCard(animalId,cardId);
 }
 
 function onCardClick(event){
-  var animalId;
-  var cardId;
-  if (event.target.id[0] == 'a'){//click on animal
-    animalId = event.target.id;
-    cardId = animalId.substr(1);
-  }
-  else{//click on card
-    animalId = 'a' + event.target.id;
-    cardId = event.target.id;
-  }
-  if (ge(animalId).style.display == 'none'){
-    setAnimation(cardId,'flipit','1s');
-    setAnimation(animalId,'flipit','1s')
-    checkLastTwo();
-    setTimeout(function(){openCard(cardId,animalId)},450);
-  }
+  var cardId = event.target.id;
+  var animalId = 'a' + event.target.id;
+  openCard(animalId,cardId);
 }
 
-
-function checkLastTwo(){
-    if (act.cardsOpen.length>=2 && act.cardsOpen.length % 2 == 0){
-      console.log(act.gridAnimals[act.cardsOpen[act.cardsOpen.length-1][0]][act.cardsOpen[act.cardsOpen.length-1][1]],
-                  act.gridAnimals[act.cardsOpen[act.cardsOpen.length-2][0]][act.cardsOpen[act.cardsOpen.length-2][1]])
-      if (act.gridAnimals[act.cardsOpen[act.cardsOpen.length-1][0]][act.cardsOpen[act.cardsOpen.length-1][1]] !=
-          act.gridAnimals[act.cardsOpen[act.cardsOpen.length-2][0]][act.cardsOpen[act.cardsOpen.length-2][1]]){
-            var cardId = 'r' + (act.cardsOpen[act.cardsOpen.length-1][0]+1).toString() + 'c' + (act.cardsOpen[act.cardsOpen.length-1][1]+1).toString();
-            var animalId = 'a' + cardId;
-            closeCard(cardId,animalId);
-            var cardId = 'r' + (act.cardsOpen[act.cardsOpen.length-2][0]+1).toString() + 'c' + (act.cardsOpen[act.cardsOpen.length-2][1]+1).toString();
-            var animalId = 'a' + cardId;
-            closeCard(cardId,animalId);
-            act.cardsOpen.splice(act.cardsOpen.length-1,1);
-            act.cardsOpen.splice(act.cardsOpen.length-1,1);
-          }
+function openCard(animalId,cardId){
+    var animalIndex = ge(animalId).animalIndex;
+    if (act.cardsOpen.indexOf(cardId)>=0 || act.lock)
+        return;
+    ge('a'+animalIndex+'audio').play();
+    act.cardsOpen.push(cardId);
+    openAnimation(animalId,cardId);
+    if (act.cardToCheck == -1){
+        act.cardToCheck = animalIndex;
+    }
+    else{
+        if (act.cardToCheck != animalIndex){
+            act.lock = true;
+            setTimeout(function(){act.lock = false;},2500);
+            setTimeout(function(){
+                card1 = act.cardsOpen[act.cardsOpen.length-1];
+                card2 = act.cardsOpen[act.cardsOpen.length-2];
+                closeCard(card1);
+                closeCard(card2);
+                act.cardToCheck = -1;
+            },2000);
+        }else{
+            if (act.cardsOpen.length == act.tilesNumArr[act.level]){
+                setTimeout(success,1000);
+        }
+        act.cardToCheck = -1;
     }
 }
-
-
-function openCard(cardId,animalId){
-  setAnimation(cardId,'reset','0s');
-  setAnimation(animalId,'reset','0s');
-  ge(cardId).src = "resource/emptycard.svg";
-  ge(animalId).style.display = "";
-  if (act.player){
-    act.player.pause();
-  }
-  act.player = ge(ge(animalId).audioId);
-  act.player.currentTime = 0;
-  act.player.play();
-  act.cardsOpen.push([ge(cardId).row,ge(cardId).col]);
-  if (act.cardsOpen.length == act.totalCards){
-    ge('flowergood').style.display = "block";
-    ge('flowergood').style.position = "fixed";
-    ge('flowergood').style.zIndex = 100;
-    ge('flowergood').style.align = "center";
-    setAnimation('flowergood','flower','2s');
+}
+function success(){ 
+    ge('balloongood').style.display = "block";
+    ge('balloongood').style.position = "fixed";
+    ge('balloongood').style.zIndex = 100;
+    ge('balloongood').style.align = "center";
+    setAnimation('balloongood','balloon','2s');
     setTimeout(onNext,2000);
-  }
-  console.log(act.cardsOpen);
-}
-function closeCard(cardId,animalId){
-    setAnimation(cardId,'reset','0s');
-    setAnimation(animalId,'reset','0s');
-    ge(cardId).src = "resource/backcard.svg";
-    ge(animalId).style.display = "none";
 }
 
+function closeCard(cardId){
+    var animalId = 'a' + cardId;
+    act.cardsOpen.splice(act.cardsOpen.indexOf(cardId));
+    setAnimation(cardId,'flipithide','0.5s');
+    setAnimation(animalId,'flipithide','0.5s');
+    
+    setTimeout(function(){
+      ge(cardId).src = "resource/backcard.svg";
+      ge(animalId).style.display = "none";
+      setAnimation(cardId,'flipitshow','0.5s');
+    },500);
+    setTimeout(function(){
+      ge(cardId).src = "resource/backcard.svg";
+      ge(animalId).style.display = "none";  
+      act.canClick = true;
+    },1000);
+}
 
 function initLevel(newLevel){
-  ge('flowergood').style.display = 'none';
-  setAnimation('flowergood','reset','0s');
+  ge('balloongood').style.display = 'none';
+  setAnimation('balloongood','reset','0s');
   act.level = (newLevel + act.gridXArr.length) % act.gridXArr.length;
   ge('level').innerHTML = act.level + 1;
-  var cards = rearrangeCards(pickCards(act.tilesNumArr[act.level]/2));
-
-  hideCards();
+  act.cards = pickCards(act.tilesNumArr[act.level]);
+  act.cardsOpen = [];
+  act.cardToCheck = -1;
+  hideAllCards();
+  act.canClick = true;
+  
   columns = act.gridXArr[act.level];
   rows = act.gridYArr[act.level];
   act.totalCards = rows*columns;
   for (var i = 0; i<columns; i++){
     for (var j = 0; j<rows; j++){
-        var id = 'r' + (j+1).toString() + 'c' + (i+1).toString();      
+        var id = 'r' + j.toString() + 'c' + i.toString();      
         ge(id).row  = j;
         ge(id).col = i;
-        ge(id).style.display = '';
+        ge(id).style.display = 'block';
         ge(id).style.padding = sformat('{}em',1/(3*rows));
         ge(id).style.height = sformat('{}em',30 / rows);
+        setAnimation(id,'reset','0s');
         ge(id).onclick = onCardClick;
         var aid = 'a' + id;
-        var rAnimal = cards[i*rows+j].toString();
-        act.gridAnimals[j][i] = cards[i*rows+j];
+        var animalIndex = act.cards[i*rows+j];
         act.cardsOpen = [];
-        var audioId = 'audio' + rAnimal;
+        var audioId = 'audio' + animalIndex;
         ge(aid).audioId = audioId;//attach audio to aid element
-        ge(aid).src = ge('a'+rAnimal).src;
+        ge(aid).src = ge('a' + animalIndex.toString()).src;
+        ge(aid).animalIndex = animalIndex;
         ge(aid).style.width = sformat('{}em',(30 / rows) * 0.5);
         ge(aid).style.top = sformat('{}em',(30 / rows) * 0.1);
         ge(aid).style.left = sformat('{}em',(30 / rows) * 0.1);
         ge(aid).style.display = 'none';
-        ge(aid).onclick = onCardClick;
+        ge(aid).onclick = onAnimalClick;
     }
   }
-
 }
 
 function initActivity(event){
   act = {  
-  // Internal level number is zero-based; but we display it as 1-based.
-  // Levels:       0   1    2    3    4  
-  // Card layout: 2x3 2x4  2x5  3x4  3x6 
-  // Tiles number: 6   8   10   12   18  
-  // Cards needed: 3   4    5    6    9  
-  level: 0,
-  tilesNumArr: [ 4,  6,  8,  10, 12, 18],
-  gridXArr: [ 2,  3,  4,   5,  4,  6],
-  gridYArr: [ 2,  2,  2,   2,  3,  3],
-  player : null,
-  gridAnimals: [[-1,-1,-1,-1,-1,-1,],[-1,-1,-1,-1,-1,-1,],[-1,-1,-1,-1,-1,-1,]],
-  cardsOpen: [],
+      level: 0,
+      numOfAnimals: 18,
+      cards: [],
+      openCards: [],
+      cardToCheck: -1,
+      tilesNumArr: [ 4,  6,  8,  10, 12, 18],
+      gridXArr: [ 2,  3,  4,   5,  4,  6],
+      gridYArr: [ 2,  2,  2,   2,  3,  3],
+      canClick: true,
   };
-  ge('flowergood').style.display = 'none';
+  ge('balloongood').style.display = 'none';
   ge('bar_home').onclick = onHome;
   ge('bar_help').onclick = onHelp;
   ge('help').onclick = onHelpHide;
@@ -295,15 +303,13 @@ function initActivity(event){
   //hide everything
   for (var i = 0; i<6; i++){
     for (var j = 0; j<3; j++){
-        var id = 'r' + (j+1).toString() + 'c' + (i+1).toString();
+        var id = 'r' + j.toString() + 'c' + i.toString();
         ge(id).style.display = 'none';
     }
   }
-  
   document.body.onresize = onResize;
   initLevel(0);
   onResize();
-
 }
 
 window.onerror = onError;
