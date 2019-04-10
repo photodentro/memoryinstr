@@ -47,8 +47,8 @@ body {
   /*overflow: hidden;*/
   padding-bottom: 5em; /* space for the menubar */
   display: flex;
-  align-content: space-around;
-  justify-content: space-around;
+  align-content: center;
+  justify-content: center;
   flex-wrap: wrap;
   position: relative;
 }
